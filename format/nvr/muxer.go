@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/deepch/vdk/av"
+	"github.com/FloatKasemtan/vdk/av"
 )
 
 type Muxer struct {
@@ -19,7 +19,7 @@ type Muxer struct {
 	seqDur    time.Duration
 }
 
-//NewMuxer func
+// NewMuxer func
 func NewMuxer(codec []av.CodecData, name, patch string, seqDur time.Duration) *Muxer {
 	return &Muxer{
 		codec:  codec,
@@ -29,12 +29,12 @@ func NewMuxer(codec []av.CodecData, name, patch string, seqDur time.Duration) *M
 	}
 }
 
-//WritePacket func
+// WritePacket func
 func (obj *Muxer) CodecUpdate(val []av.CodecData) {
 	obj.codec = val
 }
 
-//WritePacket func
+// WritePacket func
 func (obj *Muxer) WritePacket(pkt *av.Packet) (err error) {
 	if !obj.started && pkt.IsKeyFrame {
 		obj.started = true
@@ -53,7 +53,7 @@ func (obj *Muxer) WritePacket(pkt *av.Packet) (err error) {
 	return nil
 }
 
-//Close func
+// Close func
 func (obj *Muxer) Close() {
 	return
 }

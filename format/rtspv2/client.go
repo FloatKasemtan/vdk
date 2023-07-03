@@ -19,12 +19,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/codec"
-	"github.com/deepch/vdk/codec/aacparser"
-	"github.com/deepch/vdk/codec/h264parser"
-	"github.com/deepch/vdk/codec/h265parser"
-	"github.com/deepch/vdk/format/rtsp/sdp"
+	"github.com/FloatKasemtan/vdk/av"
+	"github.com/FloatKasemtan/vdk/codec"
+	"github.com/FloatKasemtan/vdk/codec/aacparser"
+	"github.com/FloatKasemtan/vdk/codec/h264parser"
+	"github.com/FloatKasemtan/vdk/codec/h265parser"
+	"github.com/FloatKasemtan/vdk/format/rtsp/sdp"
 )
 
 const (
@@ -945,14 +945,14 @@ func (client *RTSPClient) CodecUpdateVPS(val []byte) {
 
 }
 
-//Println mini logging functions
+// Println mini logging functions
 func (client *RTSPClient) Println(v ...interface{}) {
 	if client.options.Debug {
 		log.Println(v)
 	}
 }
 
-//binSize
+// binSize
 func binSize(val int) []byte {
 	buf := make([]byte, 4)
 	binary.BigEndian.PutUint32(buf, uint32(val))

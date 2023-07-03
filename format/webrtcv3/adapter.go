@@ -140,8 +140,7 @@ func (element *Muxer) WriteHeader(streams []av.CodecData, sdp64 string) (string,
 						}
 					}()
 				}
-			}
-			else if i2.Type() == av.H265 {
+			} else if i2.Type() == av.H265 {
 				track, err = webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{
 					MimeType: webrtc.MimeTypeH265,
 				}, "pion-rtsp-video", "pion-video")
