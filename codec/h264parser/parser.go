@@ -7,9 +7,9 @@ import (
 
 	"time"
 
-	"github.com/deepch/vdk/av"
-	"github.com/deepch/vdk/utils/bits"
-	"github.com/deepch/vdk/utils/bits/pio"
+	"github.com/FloatKasemtan/vdk/av"
+	"github.com/FloatKasemtan/vdk/utils/bits"
+	"github.com/FloatKasemtan/vdk/utils/bits/pio"
 )
 
 const (
