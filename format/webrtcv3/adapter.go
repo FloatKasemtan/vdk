@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"errors"
+	"github.com/deepch/vdk/codec/h265parser"
 	"log"
 	"time"
 
@@ -123,6 +124,26 @@ func (element *Muxer) WriteHeader(streams []av.CodecData, sdp64 string) (string,
 			if i2.Type() == av.H264 {
 				track, err = webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{
 					MimeType: webrtc.MimeTypeH264,
+				}, "pion-rtsp-video", "pion-video")
+				if err != nil {
+					return "", err
+				}
+				if rtpSender, err := peerConnection.AddTrack(track); err != nil {
+					return "", err
+				} else {
+					go func() {
+						rtcpBuf := make([]byte, 1500)
+						for {
+							if _, _, rtcpErr := rtpSender.Read(rtcpBuf); rtcpErr != nil {
+								return
+							}
+						}
+					}()
+				}
+			}
+			else if i2.Type() == av.H265 {
+				track, err = webrtc.NewTrackLocalStaticSample(webrtc.RTPCodecCapability{
+					MimeType: webrtc.MimeTypeH265,
 				}, "pion-rtsp-video", "pion-video")
 				if err != nil {
 					return "", err
@@ -265,6 +286,22 @@ func (element *Muxer) WritePacket(pkt av.Packet) (err error) {
 				}
 
 			*/
+		case av.H265:
+			nalus, _ := h265parser.SplitNALUs(pkt.Data)
+			for _, nalu := range nalus {
+				naltype := nalu[0] & 0x1f
+				if naltype == 5 {
+					codec := tmp.codec.(h265parser.CodecData)
+					err = tmp.track.WriteSample(media.Sample{Data: append([]byte{0, 0, 0, 1}, bytes.Join([][]byte{codec.SPS(), codec.PPS(), nalu}, []byte{0, 0, 0, 1})...), Duration: pkt.Duration})
+				} else {
+					err = tmp.track.WriteSample(media.Sample{Data: append([]byte{0, 0, 0, 1}, nalu...), Duration: pkt.Duration})
+				}
+				if err != nil {
+					return err
+				}
+			}
+			WritePacketSuccess = true
+			return
 		case av.PCM_ALAW:
 		case av.OPUS:
 		case av.PCM_MULAW:
