@@ -1,4 +1,4 @@
-module github.com/floatkasemtan/vdk
+module github.com/FloatKasemtan/vdk
 
 go 1.18
 
